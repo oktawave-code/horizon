@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/collector
+      statusPatch:
+        endpoints:
+          collector: ((/spec/namespace)).((@ENV[COLLECTOR_SUFFIX]))
+    kubernetes.io/ingress.class: nginx
+    nginx.org/keepalive: "128"
+    nginx.org/location-snippets: |
+      limit_req zone=perserver((limits/input)) burst=10;
+  name: collector-ingress
+spec:
+  tls:
+  - hosts:
+    - ((/spec/namespace)).((@ENV[COLLECTOR_SUFFIX]))
+    secretName: default-server-secret
+  rules:
+  - host: ((/spec/namespace)).((@ENV[COLLECTOR_SUFFIX]))
+    http:
+      paths:
+      - backend:
+          serviceName: collector
+          servicePort: 8080
+        path: /

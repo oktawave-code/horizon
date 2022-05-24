@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <script type="text/javascript" src="/js/oidc-client.min.js"></script>
+    <script type="text/javascript">
+        const manager = new Oidc.UserManager();
+        manager.signinRedirectCallback()
+            .then(user => {
+                if (user === null) {
+                    console.error('User is undefined');
+                } else {
+                    window.location = '/';
+                }
+            })
+            .catch(err => {
+                console.error('User authentication error.', err);
+            });
+
+    </script>
+</body>
+
+</html>

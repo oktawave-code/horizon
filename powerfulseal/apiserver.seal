@@ -1,0 +1,23 @@
+config:
+  minSecondsBetweenRuns: 30
+  maxSecondsBetweenRuns: 60
+
+nodeScenarios: []
+podScenarios:
+  - name: "delete one of api-servers"
+    match:
+      - namespace:
+          name: "kube-system"
+    filters:
+      - property:
+          name: "name"
+          value: "kube-apiserver*"
+      - property:
+          name: "state"
+          value: "Running"
+      - randomSample:
+          size: 1
+    actions:
+      - kill:
+          probability: 0.77
+          force: true

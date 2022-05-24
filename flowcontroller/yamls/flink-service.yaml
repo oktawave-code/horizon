@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/flink
+      condition: "*cnt"
+  name: flink-jobmanager
+spec:
+  ports:
+  - name: rpc
+    port: 6123
+  - name: blob
+    port: 6124
+  - name: query
+    port: 6125
+  - name: ui
+    port: 8081
+  selector:
+    app: flink
+    component: jobmanager
+  sessionAffinity: None
+  type: ClusterIP

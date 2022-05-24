@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-horizon-api-to-flink-api
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: 
+    matchLabels:
+      app: flink
+      component: jobmanager
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: horizon-api
+      namespaceSelector:
+        matchLabels:
+          name: horizon-api
+    ports:
+    - protocol: TCP
+      port: 8081

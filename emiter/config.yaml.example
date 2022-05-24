@@ -1,0 +1,26 @@
+rules:
+  -
+    name:      rule1
+    type:      elasticsearch
+    src:       /elasticsearch
+    dst:       /aaa/bbb/
+  -
+    name:      rule2
+    type:      redis
+    src:       /redis
+    dst:       /
+  -
+    name:      rule3
+    type:      ocs
+    src:       /ocs
+    dst:       /xxx/
+  -
+    name:      rule3
+    type:      ocs
+    src:       /aaa
+    dst:       /xxx/
+  -
+    name:      rule4
+    type:      ocs
+    src:       /bbb
+    dst:       /xxx/

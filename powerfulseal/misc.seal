@@ -1,0 +1,113 @@
+config:
+  minSecondsBetweenRuns: 30
+  maxSecondsBetweenRuns: 180
+
+nodeScenarios: []
+podScenarios:
+  - name: "delete random pods in default namespace"
+    match:
+      - namespace:
+          name: "2load011-s-1-5-21-85421905-1770614699-2678939328-4452"
+    filters:
+      - randomSample:
+          size: 1
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in kube-system namespace"
+    match:
+      - namespace:
+          name: "kube-system"
+    filters:
+      - randomSample:
+          size: 1
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in cephrbd namespace"
+    match:
+      - namespace:
+          name: "cephrbd"
+    filters:
+      - randomSample:
+          size: 3
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in filebeat namespace"
+    match:
+      - namespace:
+          name: "filebeat"
+    filters:
+      - randomSample:
+          size: 2
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in flowcontroller namespace"
+    match:
+      - namespace:
+          name: "flowcontroller"
+    filters:
+      - randomSample:
+          size: 2
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in horizon-api namespace"
+    match:
+      - namespace:
+          name: "horizon-api"
+    filters:
+      - randomSample:
+          size: 1
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in horizon-web namespace"
+    match:
+      - namespace:
+          name: "horizon-web"
+    filters:
+      - randomSample:
+          size: 1
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in nginx-ingress namespace"
+    match:
+      - namespace:
+          name: "nginx-ingress"
+    filters:
+      - randomSample:
+          size: 2
+    actions:
+      - kill:
+          probability: 0.77
+          force: true
+
+  - name: "delete random pods in flowbillexporter namespace"
+    match:
+      - namespace:
+          name: "flowbillexporter"
+    filters:
+      - randomSample:
+          size: 1
+    actions:
+      - kill:
+          probability: 0.77
+          force: true

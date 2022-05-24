@@ -1,0 +1,9 @@
+spec:
+  somedefs:
+    str1: blah
+    str2: "123"
+    str3: ""
+    num: 123
+    obj:
+      a: 1
+      b: abc

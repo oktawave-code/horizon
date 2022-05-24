@@ -1,0 +1,95 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/elasticsearch
+      condition: "*cnt"
+  name: elasticsearch
+spec:
+  serviceName: elasticsearch
+  replicas: ((cnt:int))
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      nodeSelector:
+        role: node
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - elasticsearch
+              topologyKey: "kubernetes.io/hostname"
+      initContainers:
+      - name: init-sysctl
+        image: registry.hn.oktawave.com/busybox:1.29.2
+        command:
+        - sysctl
+        - -w
+        - vm.max_map_count=262144
+        securityContext:
+          privileged: true
+      nodeSelector:
+        role: node
+      containers:
+      - name: elasticsearch
+        image: ((@ENV[ELASTIC_IMAGE]))
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: CLUSTER_NAME
+          value: "elasticsearch"
+        - name: NUMBER_OF_MASTERS
+          value: "2"
+        - name: NODE_MASTER
+          value: "true"
+        - name: NODE_INGEST
+          value: "false"
+        - name: NODE_DATA
+          value: "true"
+        - name: HTTP_ENABLE
+          value: "true"
+        - name: ES_JAVA_OPTS
+          value: "-Xms256m -Xmx256m"
+        - name: PROCESSORS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
+        resources:
+          limits:
+            cpu: 1
+        ports:
+        - containerPort: 9200
+          name: http
+        - containerPort: 9300
+          name: transport
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: rbd
+      resources:
+        requests:
+          storage: ((quota))

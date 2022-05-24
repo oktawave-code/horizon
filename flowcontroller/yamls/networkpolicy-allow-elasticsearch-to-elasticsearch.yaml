@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-elasticsearch-to-elasticsearch
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: 
+    matchLabels:
+      app: elasticsearch
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: elasticsearch
+      namespaceSelector:
+        matchLabels:
+          name: ((/spec/namespace))

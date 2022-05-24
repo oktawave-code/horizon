@@ -1,0 +1,616 @@
+swagger: '2.0'
+info:
+  description: Oktawave Cloud Keys
+  version: 0.1.0
+  title: Oktawave Cloud Keys
+host: queen-sgx.hn.oktawave.com
+basePath: /ock
+schemes:
+  - https
+paths:
+  /keys:
+    post:
+      summary: Create new master key
+      description: >-
+        Master key represents the key itself. Aliases and policies  define
+        access autorisations to this key
+      operationId: create_key
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Authentication token
+          required: true
+          schema:
+            $ref: '#/definitions/CreateKey'
+      responses:
+        '201':
+          description: OK
+          schema:
+            $ref: '#/definitions/KeyDescription'
+        '405':
+          description: Invalid Input
+      x-swagger-router-controller: swagger_server.controllers.default_controller
+  /import:
+    post:
+      summary: Imports a new master key
+      description: >-
+        A new key of given type is imported
+      operationId: import_key
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: authentication token
+          required: true
+          schema:
+            $ref: '#/definitions/ImportKey'
+      responses:
+        '201':
+          description: OK
+          schema:
+            $ref: '#/definitions/KeyDescription'
+        '405':
+          description: Invalid Input
+  /aliases:
+    post:
+      summary: Create key alias
+      description: >-
+        Alias is a designated pointer to the master key, assigned policies limit
+        allowed user actions
+      operationId: create_alias
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Authentication token
+          required: true
+          schema:
+            $ref: '#/definitions/CreateAlias'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AliasDescription'
+        '405':
+          description: Invalid Input
+      x-swagger-router-controller: swagger_server.controllers.default_controller
+  /encrypt:
+    post:
+      summary: Encrypt data
+      description: Encrypt using one of available modes
+      operationId: encrypt
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/EncryptRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EncryptResult'
+        '400':
+          description: Invalid Input
+      x-swagger-router-controller: swagger_server.controllers.default_controller
+  /decrypt:
+    post:
+      summary: Decrytp data
+      description: Decrypt using one of available modes
+      operationId: decrypt
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/DecryptRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DecryptResult'
+        '400':
+          description: Invalid Input
+      x-swagger-router-controller: swagger_server.controllers.default_controller
+  /sign:
+    post:
+      summary: Sign message
+      description: sth
+      operationId: sign
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/SignRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SignResult'
+        '400':
+          description: Invalid Input
+  /verify:
+    post:
+      summary: Verify message
+      description: sth
+      operationId: verify
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/VerifyRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/VerifyResult'
+        '400':
+          description: Invalid
+  /digest:
+    post:
+      summary: Digest message - hash
+      description: sth
+      operationId: digest
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/DigestRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DigestResult'
+        '400':
+          description: Invalid Input
+  /random:
+    post:
+      summary: Generate random bytes
+      description: sth
+      operationId: generate_random
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/RandomRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RandomResult'
+        '400':
+          description: Invalid Input
+  /manage:
+    post:
+      summary: Generate random bytes
+      description: sth
+      operationId: manage
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/RandomRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RandomResult'
+        '400':
+          description: Invalid Input
+  /shared_secret:
+    post:
+      summary: Generate shared secret
+      operationId: shared_secret
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/SharedSecretRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SharedSecretResult'
+        '400':
+          description: Invalid Input
+  /public_key:
+    post:
+      summary: Returns the public part of the key 
+      operationId: public_key
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Msg
+          required: true
+          schema:
+            $ref: '#/definitions/PublicKeyRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PublicKeyResult'
+        '400':
+          description: Invalid Input
+definitions:
+  KeyDescription:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Master key id
+      Token:
+        type: string
+        description: Master key token
+      Policies:
+        type: array
+        items:
+          $ref: '#/definitions/KeyPolicy'
+    example:
+      KeyId: 'ock:440659760935:key'
+      Token: 123e4567-e89b-12d3-a456-426655440000
+      Policies:
+        - Action:
+            - 'ock:Describe'
+            - 'ock:CreateAlias'
+          AllowedIp: '*'
+  AliasDescription:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key id of the new alias
+      Token:
+        type: string
+        description: Token of alias
+      Policies:
+        $ref: '#/definitions/AliasPolicies'
+    example:
+      KeyId: 'ock:440659760935:alias/web-api'
+      Token: deadbeef-27a3-4ea9-a35a-beefdead
+      Policies:
+        Action:
+          - 'ock:Encrypt'
+          - 'ock:Decrypt'
+          - 'ock:Describe'
+        AllowedIp: 192.168.1.1/24
+  KeyType:
+    type: string
+    enum:
+      - AES
+      - RSA
+      - ECDSA
+      - DH
+      - TOTP
+    description: 'Key type: AES, RSA, ECDSA, DH, Time one-time-password'
+    default: AES
+  CreateKey:
+    type: object
+    properties:
+      OktaToken:
+        type: string
+        description: Oktawave Authentication Token
+      Type:
+        $ref: '#/definitions/KeyType'
+      Length:
+        type: integer
+        description: >-
+          Key length should reflect desired strength of the key, depending on
+          its type
+        default: 256
+      Policies:
+        type: array
+        items:
+          $ref: '#/definitions/KeyPolicy'
+    example:
+      OktaToken: 060cfe2657-d2ff-765e-424e-9f54f0ebd1
+  ImportKey:
+    type: object
+    properties:
+      OktaToken:
+        type: string
+        description: Oktawave Authentication Token
+      Type:
+        $ref: '#/definitions/KeyType'
+      Length:
+        type: integer
+        description: 'Key length '
+        default: 3072
+      Policies:
+        type: array
+        items:
+          $ref: '#/definitions/KeyPolicy'
+      PrivateKey:
+        type: string
+        description: 'Private key to be imported. Encoded as in OpenSSL (base64)'
+      PublicKey:
+        type: string
+        description: 'Public key to be imported'
+  KeyPolicy:
+    type: object
+    properties:
+      Action:
+        type: array
+        items:
+          type: string
+          description: Action permission
+      AllowedIp:
+        type: string
+        description: Allowed Ip range for requests
+  AliasPolicies:
+    type: object
+    properties:
+      Action:
+        type: array
+        items:
+          type: string
+          description: Action permission
+      ExpirationDate:
+        type: string
+        description: Alias expiration date
+      AllowedIp:
+        type: string
+        description: Allowed Ip range for requests
+  CreateAlias:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Master key id
+      Token:
+        type: string
+        description: A valid token for master key
+      KeyAlias:
+        type: string
+        description: New alias name of the master key
+      Policies:
+        $ref: '#/definitions/AliasPolicies'
+    example:
+      KeyId: 'ock:440659760935:key'
+      Token: 123e4567-e89b-12d3-a456-426655440000
+      KeyAlias: alias/web-api
+  EncryptRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key Alias
+      Token:
+        type: string
+        description: Token
+      Plaintext:
+        type: string
+        description: Base64 encoded plaintext
+      Mode:
+        type: string
+        description: Encryption mode
+        default: AES-GCM
+      EncryptionContext:
+        $ref: '#/definitions/EncryptRequest_EncryptionContext'
+    example:
+      KeyId: 'ock:440659760935:alias/web-api'
+      Token: deadbeef-27a3-4ea9-a35a-beefdead
+      Plaintext: QWxpY2UgaGFzIGEgY2F0
+  EncryptResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Alias Key Id
+      CiphertextBlob:
+        type: string
+        description: Ciphertext Blob
+  DecryptRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key Alias
+      Token:
+        type: string
+        description: Token
+      CiphertextBlob:
+        type: string
+        description: Base64 encoded ciphertext
+      Mode:
+        type: string
+        description: Encryption mode
+        enum:
+          - AES-GCM
+          - AES-CTR
+        default: AES-GCM
+      EncryptionContext:
+        $ref: '#/definitions/EncryptRequest_EncryptionContext'
+    example:
+      KeyId: 'ock:440659760935:alias/web-api'
+      Token: deadbeef-27a3-4ea9-a35a-beefdead
+      CiphertextBlob: QWxpY2UgaGFzIGEgY2F0
+  DecryptResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Plaintext:
+        type: string
+        description: Ciphertext Blob
+    example:
+      KeyId: 'ock:440659760935:alias/web-api'
+      Plaintext: QWxpY2UgaGFzIGEgY2F0
+  RequestError:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key Alias
+      Error:
+        type: string
+        description: Error message
+    example:
+      KeyId: 'ock:440659760935:alias/web-api'
+      Error: Operation not permitted by access control
+  EncryptRequest_EncryptionContext:
+    properties:
+      AAD:
+        type: string
+  SignRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key Alias
+      Token:
+        type: string
+        description: Token
+      Message:
+        type: string
+        description: Base64 encoded message
+  SignResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Signature:
+        type: string
+        description: Signature
+  VerifyRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Token:
+        type: string
+        description: Token
+      Message:
+        type: string
+        description: Base 64 encoded message
+      Signature:
+        type: string
+        description: Signature
+  VerifyResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Result:
+        type: string
+        description: result of signature verification
+  DigestRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Token:
+        type: string
+        description: Token
+      Message:
+        type: string
+        description: Base64 encoded message
+  DigestResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Digest:
+        type: string
+        description: Base 64 encoded digest
+  RandomRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Token:
+        type: string
+        description: Token
+      Length:
+        type: integer
+        description: Number of bytes requested
+  RandomResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Random:
+        type: string
+        description: Random bytes
+  SharedSecretRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Token:
+        type: string
+        description: Token
+      PublicKey:
+        type: string
+        description: PublicKey
+  SharedSecretResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Secret:
+        type: string
+        description: Secret in hex
+  PublicKeyRequest:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      Token:
+        type: string
+        description: Token
+  PublicKeyResult:
+    type: object
+    properties:
+      KeyId:
+        type: string
+        description: Key alias id
+      PublicKey:
+        type: string
+        description: Public Key

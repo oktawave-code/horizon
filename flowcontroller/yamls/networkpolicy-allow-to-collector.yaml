@@ -1,0 +1,15 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-external-to-collector
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  podSelector:
+    matchLabels:
+      app: collector
+  ingress:
+  - from: []
+    ports:
+    - port: 8080

@@ -1,0 +1,19 @@
+# Template:
+apiVersion: v1
+kind: pod
+metadata:
+  name: test-pod
+  annotations:
+    testDef:
+      type: single
+      base: /spec/somedefs
+spec:
+  resultIsString:
+    justUseProvidedType: ((str1))
+    conversionNotNeeded: ((str1:str))
+    concatenationForcesStringType: ((num))-someSuffix
+    someOtherConcatenation: ((str1))((str2))
+    evenForEdgeCases: ((num))((str3))
+    explicitConversion: ((num:str))
+    ignoredConversion: somePrefix((str2:int))
+    serializedObject: ((obj:json))

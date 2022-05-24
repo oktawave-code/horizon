@@ -1,0 +1,48 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    flowDef:
+      type: list
+      base: /spec/processor
+      condition: "*sgx=true"
+  name: processor-((name:name))
+spec:
+  replicas: ((cnt:int))
+  template:
+    metadata:
+      labels:
+        app: processor
+        name: ((name))
+    spec:
+      nodeSelector:
+        role: sgx
+      containers:
+      - name: processor-((name))
+        image: ((image:image))
+        env:
+        - name: KAFKA_HOSTNAME
+          value: "kafka-service"
+        - name: KAFKA_PORT
+          value: "9092"
+        - name: ELASTICSEARCH_HOSTNAME
+          value: "elasticsearch"
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: ELASTICSEARCH_PROTOCOL
+          value: "http"
+        resources:
+          limits:
+            memory: ((limits/memory))
+            cpu: ((limits/cpu))
+        volumeMounts:
+        - mountPath: /dev/isgx
+          name: devisgx
+        securityContext:
+          privileged: true
+      volumes:
+      - name: devisgx
+        hostPath:
+          path: /dev/isgx
+      imagePullSecrets:
+      - name: processor-cred-((name:name))

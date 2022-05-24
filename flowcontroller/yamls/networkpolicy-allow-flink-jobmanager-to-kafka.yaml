@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-flink-jobmanager-to-kafka
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: 
+    matchLabels:
+      app: kafka
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: flink
+          component: jobmanager
+      namespaceSelector:
+        matchLabels:
+          name: ((/spec/namespace))
+    ports:
+    - protocol: TCP
+      port: 9092

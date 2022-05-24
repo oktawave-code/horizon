@@ -1,0 +1,29 @@
+{
+  "name": "horizon-web-flow-editor",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "serve:staging": "vue-cli-service serve --mode staging",
+    "build": "vue-cli-service build",
+    "build:staging": "vue-cli-service build --mode staging",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "mxgraph": "^3.9.11",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.2.0",
+    "@vue/cli-plugin-eslint": "^3.2.0",
+    "@vue/cli-service": "^3.2.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "body-parser": "^1.18.3",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0-0",
+    "vue-template-compiler": "^2.5.17"
+  }
+}

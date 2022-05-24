@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-processor-to-elasticsearch-egress
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  policyTypes:
+  - Egress
+  podSelector: 
+    matchLabels:
+      app: processor
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: elasticsearch
+      namespaceSelector:
+        matchLabels:
+          name: ((/spec/namespace))
+    ports:
+    - protocol: TCP
+      port: 9200

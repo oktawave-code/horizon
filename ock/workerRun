@@ -1,0 +1,4 @@
+#docker run --net royalnet --ip 172.18.0.22 -d -p 5000:5000 queen-worker
+sudo docker run --net royalnet --ip 172.18.0.22 -it  --device /dev/isgx --device /dev/mei0 -v /var/run/aesmd/:/var/run/aesmd -p 5000:5000 queen-worker /bin/bash
+
+

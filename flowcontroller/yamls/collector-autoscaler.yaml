@@ -1,0 +1,25 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/collector
+      condition: "*limits/maxCnt"
+  name: collector
+spec:
+  minReplicas: ((limits/minCnt))
+  maxReplicas: ((limits/maxCnt))
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: collector
+  metrics:
+  - type: Object
+    object:
+      metricName: collector_pressure
+      target:
+        apiVersion: extensions/v1beta1
+        kind: Ingress
+        name: ((/spec/namespace)).((@ENV[COLLECTOR_SUFFIX]))
+      targetValue: 100

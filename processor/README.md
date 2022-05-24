@@ -1,0 +1,1 @@
+Implementation of processor with different emitter integration.

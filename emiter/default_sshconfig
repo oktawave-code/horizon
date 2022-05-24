@@ -1,0 +1,5 @@
+StrictHostKeyChecking no
+
+Host git.ops.oktawave.com crash.ops.oktawave.com
+  Port 7999
+  User git

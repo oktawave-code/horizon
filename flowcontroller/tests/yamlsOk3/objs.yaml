@@ -1,0 +1,13 @@
+# Template:
+apiVersion: v1
+kind: pod
+metadata:
+  name: test-pod
+  annotations:
+    testDef:
+      type: single
+      base: /spec/somedefs
+spec:
+  resultIsObject:
+    includeEntireSubtree: ((obj))
+    conversionNotNeeded: ((obj:obj))

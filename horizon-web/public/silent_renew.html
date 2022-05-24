@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<script src="/libs/oidc-client.min.js"></script>
+<script>
+      const settings = {
+        authority: 'https://id.dev.oktawave.com/core',
+        client_id: 'HorizonWeb',
+        redirect_uri: window.location.protocol + '//' + window.location.host + '/authorize.html',
+        post_logout_redirect_uri: window.location.protocol + '//' + window.location.host + '/index.html',
+        response_type: 'id_token token',
+        scope: 'oktawave.api openid profile',
+        silent_redirect_uri: window.location.protocol + '//' + window.location.host + '/silent_renew.html',
+        filterProtocolClaims: false,
+        automaticSilentRenew: true
+    };
+
+    new Oidc.UserManager(this.settings).signinSilentCallback().then(function(user) {
+      log("signin response success", user);
+    }).catch(function(err) {
+      log(err);
+      console.error('Silent renewal failed!.' + err.message);
+    });
+</script>
+</body>
+</html>

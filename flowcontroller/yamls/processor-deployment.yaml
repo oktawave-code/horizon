@@ -1,0 +1,50 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    flowDef:
+      type: list
+      base: /spec/processor
+      condition: sgx=false
+  name: processor-((name:name))
+spec:
+  replicas: ((cnt:int))
+  template:
+    metadata:
+      labels:
+        app: processor
+        name: ((name))
+    spec:
+      initContainers:
+      - name: kafka-availability-check
+        image: busybox
+        command: ['sh', '-c', 'while ! echo exit | nc -w1 kafka-service 9092; do sleep 4; done;']
+      nodeSelector:
+        role: node
+      securityContext:
+        runAsUser: 500
+        fsGroup: 500
+      containers:
+      - name: processor-((name))
+        image: ((image:image))
+        env:
+        - name: KAFKA_HOSTNAME
+          value: "kafka-service"
+        - name: KAFKA_PORT
+          value: "9092"
+        - name: ELASTICSEARCH_HOSTNAME
+          value: "elasticsearch"
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: ELASTICSEARCH_PROTOCOL
+          value: "http"
+        - name: REDIS_HOSTNAME
+          value: "redis-cluster"
+        - name: REDIS_PORT
+          value: "6379"
+        resources:
+          limits:
+            memory: ((limits/memory))
+            cpu: ((limits/cpu))
+      imagePullSecrets:
+      - name: processor-cred-((name:name))

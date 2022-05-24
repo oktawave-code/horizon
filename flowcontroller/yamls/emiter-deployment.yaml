@@ -1,0 +1,52 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/emitter
+  name: emiter
+spec:
+  replicas: ((cnt:int))
+  template:
+    metadata:
+      labels:
+        app: emiter
+    spec:
+      nodeSelector:
+        role: node
+      securityContext:
+        runAsUser: 500
+        fsGroup: 500
+      containers:
+      - name: emiter
+        image: ((@ENV[EMITTER_IMAGE]))
+        ports:
+        - containerPort: 8080
+          name: entry
+        env:
+        - name: CLIENT_ID
+          value: "((/spec/clientId:name))"
+        - name: ID_SERVER_URL
+          value: "((@ENV[ID_SERVER_URL]))"
+        - name: BACKEND_ELASTIC
+          value: "elasticsearch:9200"
+        - name: BACKEND_REDIS
+          value: "redis:6379"
+        - name: OCS_AUTH_URL
+          value: "https://ocs-pl.oktawave.com/auth/v1.0"
+        - name: ROUTING_FILE
+          value: "/etc/config/routing.yaml"
+        - name: OCS_USER
+          value: "((/spec/ocs/user:?str))"
+        - name: OCS_PASS
+          value: "((/spec/ocs/pass:?str))"
+        - name: LISTEN_PORT
+          value: "8080"
+        volumeMounts:
+        - name: routing
+          mountPath: /etc/config
+      volumes:
+        - name: routing
+          configMap:
+            name: emitter-routing

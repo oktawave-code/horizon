@@ -1,0 +1,12 @@
+crash.ops.oktawave.com/git/scm/hor/genericcache.git v0.0.0-20180511145959-992623a2a031 h1:qWQ2+5yz1h1V1BZ6jvS891V+R/mfFYh/Xu3Nm/ZuQlY=
+crash.ops.oktawave.com/git/scm/hor/genericcache.git v0.0.0-20180511145959-992623a2a031/go.mod h1:AjgJ8Cwx6nCZYHdKi65BKAK8SLNR89ASpEDwGY6xZsc=
+crash.ops.oktawave.com/git/scm/hor/idserverlink.git v0.0.0-20180702124346-9bc5b0e20950 h1:6bOXC+yM3cgK3sy+SYFnztskk2g+6EF+qoPcDYFaqmQ=
+crash.ops.oktawave.com/git/scm/hor/idserverlink.git v0.0.0-20180702124346-9bc5b0e20950/go.mod h1:DOcf9QYlpqvs9OmOZJ+dqTZ8HcYoiE5MnTpmp+LvgkY=
+github.com/go-redis/redis v6.14.1+incompatible h1:kSJohAREGMr344uMa8PzuIg5OU6ylCbyDkWkkNOfEik=
+github.com/go-redis/redis v6.14.1+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=
+github.com/gorilla/context v1.1.1/go.mod h1:kBGZzfjB9CEq2AlWe17Uuf7NDRt0dE0s8S51q0aT7Yg=
+github.com/gorilla/mux v1.6.2 h1:Pgr17XVTNXAk3q/r4CpKzC5xBM/qW1uVLV+IhRZpIIk=
+github.com/gorilla/mux v1.6.2/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.2.1 h1:mUhvW9EsL+naU5Q3cakzfE91YhliOondGd6ZrsDBHQE=
+gopkg.in/yaml.v2 v2.2.1/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-zk-to-zk
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: 
+    matchLabels:
+      app: zk
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: zk
+      namespaceSelector:
+        matchLabels:
+          name: ((/spec/namespace))

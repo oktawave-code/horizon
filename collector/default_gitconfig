@@ -1,0 +1,5 @@
+[user]
+  email = bambooagento@oktawave.local
+  name = bambooagent
+[url "ssh://git@git.ops.oktawave.com/"]
+  insteadOf = https://crash.ops.oktawave.com/git/scm/

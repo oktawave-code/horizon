@@ -1,0 +1,7 @@
+enclave {
+    trusted {
+
+        public void ecall_pass([in, out, size=length] uint8_t *p, uint32_t length);
+
+    };
+};

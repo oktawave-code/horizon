@@ -1,0 +1,16 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    flowDef:
+      type: list
+      base: /spec/processor
+  name: processor-((name:name))
+spec:
+  maxReplicas: ((limits/maxCnt))
+  minReplicas: ((limits/minCnt))
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: processor-((name:name))
+  targetCPUUtilizationPercentage: 80

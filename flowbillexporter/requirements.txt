@@ -1,0 +1,4 @@
+flask-restful
+flask
+gunicorn==19.6.0
+requests

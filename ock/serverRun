@@ -1,0 +1,3 @@
+docker run --net royalnet --ip 172.18.0.21 -d -p 6000:6000 queen-server
+
+sudo docker run  -it --device /dev/isgx --device /dev/mei0 -v /mnt/shared/:/mnt/shared/ -v /var/run/aesmd/:/var/run/aesmd -p 6000:6000 queen-server /bin/bash

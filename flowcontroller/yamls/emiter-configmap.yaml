@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    flowDef:
+      priority: 3
+      type: single
+      base: /spec/emitter
+  name: emitter-routing
+data:
+  routing.yaml: |
+    rules:
+    ((routing:yaml))

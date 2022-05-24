@@ -1,0 +1,7 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET        /topics                  controllers.TopicsController.list
+POST       /topics                  controllers.TopicsController.create
+DELETE     /topics                  controllers.TopicsController.delete

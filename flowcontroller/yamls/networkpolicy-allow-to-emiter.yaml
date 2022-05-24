@@ -1,0 +1,15 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-external-to-emiter
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  podSelector:
+    matchLabels:
+      app: emiter
+  ingress:
+  - from: []
+    ports:
+    - port: 8080

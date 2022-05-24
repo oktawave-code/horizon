@@ -1,0 +1,12 @@
+html,
+body {
+    background-color:#f8f8f8;
+}
+
+.uk-alert-danger {
+    border: 1px solid;
+}
+
+#logo {
+    height: 70px;
+}

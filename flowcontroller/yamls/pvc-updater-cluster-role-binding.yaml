@@ -1,0 +1,12 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pvc-updater-((/spec/namespace))
+subjects:
+- kind: ServiceAccount
+  name: pvc-updater
+  namespace: ((/spec/namespace))
+roleRef:
+  kind: ClusterRole
+  name: pvc-updater-((/spec/namespace))
+  apiGroup: rbac.authorization.k8s.io

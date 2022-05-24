@@ -1,0 +1,12 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pvc-updater
+subjects:
+- kind: ServiceAccount
+  name: pvc-updater
+  namespace: ((/spec/namespace))
+roleRef:
+  kind: Role
+  name: pvc-updater
+  apiGroup: rbac.authorization.k8s.io

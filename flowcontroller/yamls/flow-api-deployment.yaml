@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    flowDef: {}
+  name: flow-api
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flow-api
+    spec:
+      nodeSelector:
+        role: node
+      initContainers:
+      - name: kafka-availability-check
+        image: registry.hn.oktawave.com/busybox:1.29.2
+        command: ['sh', '-c', 'while ! echo exit | nc -w1 kafka-service 9092; do sleep 4; done;']
+      containers:
+      - name: flow-api
+        image: registry.hn.oktawave.com/flow-api:15
+        ports:
+        - containerPort: 80
+          name: entry
+        env:
+        - name: APPLICATION_SECRET
+          value: '`3svXo@41D8^dCyK3cxGsK32yXPmvNy2[[go>3ci]2pzO85=?z59cL]2'
+        - name: AUTHORIZATION_URL 
+          value: "((@ENV[ID_SERVER_URL]))"
+        - name: SKIP_SSL_CERT_VALIDATION 
+          value: "true"
+        - name: KAFKA_API_URL
+          value: "kafka-service:9092"

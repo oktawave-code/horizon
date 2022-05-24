@@ -1,0 +1,21 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-horizon-api-to-flow-api
+  annotations:
+    flowDef:
+      priority: 1
+spec:
+  podSelector:
+    matchLabels:
+      app: flow-api
+  ingress:
+  - from: 
+    - namespaceSelector:
+        matchLabels:
+          name: horizon-api
+      podSelector:
+        matchLabels:
+          app: horizon-api
+    ports:
+    - port: 80

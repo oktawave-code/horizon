@@ -1,0 +1,6 @@
+unroutedTopic: unrouted
+routing:
+- topic: backup2
+- filter: ([a-z]+)
+  source: X-Horizon-Routing
+  topic: x-$1

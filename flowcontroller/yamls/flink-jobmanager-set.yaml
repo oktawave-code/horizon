@@ -1,0 +1,77 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/flink
+      condition: "*cnt"
+  name: flink-jobmanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flink
+        component: jobmanager
+    spec:
+      nodeSelector:
+        role: node
+      initContainers:
+      - name: upload-hfe-jar
+        image: ((@ENV[HFE_IMAGE]))
+        command: [
+          'sh',
+          '-c',
+          'mkdir -p /var/uploads/flink-web-upload && chmod o+rwx /var/uploads/flink-web-upload && cp /usr/src/hfe/target/hfe-1.0-SNAPSHOT.jar /var/uploads/flink-web-upload/00000000-0000-0000-0000-000000000000_horizon-flow-editor.jar && chmod o-wx /var/uploads/flink-web-upload/00000000-0000-0000-0000-000000000000_horizon-flow-editor.jar']
+        volumeMounts:
+        - name: datadir
+          mountPath: /var/uploads
+      - name: kafka-availability-check
+        image: registry.hn.oktawave.com/busybox:1.29.2
+        command: ['sh', '-c', 'while ! echo exit | nc -w1 kafka-service 9092; do sleep 4; done;']
+      containers:
+      - name: flink-jobmanager
+        image: ((@ENV[FLINK_IMAGE]))
+        args:
+        - jobmanager
+        ports:
+        - containerPort: 6123
+          name: rpc
+        - containerPort: 6124
+          name: blob
+        - containerPort: 6125
+          name: query
+        - containerPort: 8081
+          name: ui
+        env:
+        - name: JOB_MANAGER_RPC_ADDRESS
+          value: "flink-jobmanager"
+        - name: KAFKA_HOSTNAME
+          value: "kafka-service" 
+        - name: KAFKA_PORT
+          value: "9092"
+        - name: ELASTICSEARCH_HOSTNAME
+          value: "elasticsearch" 
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: ELASTICSEARCH_PROTOCOL
+          value: "http"
+        - name: REDIS_HOSTNAME
+          value: "redis-cluster"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: MONGODB_CONNECTION_URL
+          value: "mongodb://mongo.horizon-api:27017"
+        volumeMounts:
+        - name: datadir
+          mountPath: /var/uploads
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: rbd
+      resources:
+        requests:
+          storage: 2Gi

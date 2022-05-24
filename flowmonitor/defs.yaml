@@ -1,0 +1,190 @@
+resource:
+  group: horizon.oktawave
+  version: v1alpha1
+  names:
+    kind: Flow
+    plural: flows
+    singular: flow
+records:
+- metric: flow_collector_input_limit
+  type: single
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: host
+    type: direct
+    path: /status/endpoints/collector
+  - name: rawValue
+    type: direct
+    path: /spec/collector/limits/input
+  value:
+    type: direct
+    path: /spec/collector/limits/input
+- metric: flow_retention
+  type: single
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: rawValue
+    type: direct
+    path: /spec/kafka/retention
+  value:
+    type: direct
+    path: /spec/kafka/retention
+- metric: flow_processor_memory_plan
+  type: list
+  base: /spec/processor/
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: processor
+    type: index
+  - name: rawValue
+    type: field
+    subpath: limits/memory
+  value:
+    type: field
+    subpath: limits/memory
+- metric: flow_processor_cpu_plan
+  type: list
+  base: /spec/processor/
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: processor
+    type: index
+  - name: rawValue
+    type: field
+    subpath: limits/cpu
+  value:
+    type: field
+    subpath: limits/cpu
+- metric: flow_flink_cpu_plan
+  type: single
+  base: /spec/flink/
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: flink
+    type: index
+  - name: rawValue
+    type: field
+    subpath: limits/cpu
+  value:
+    type: field
+    subpath: limits/cpu
+- metric: flow_flink_memory_plan
+  type: single
+  base: /spec/flink/
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: flink
+    type: index
+  - name: rawValue
+    type: field
+    subpath: limits/memory
+  value:
+    type: field
+    subpath: limits/memory
+- metric: flow_emitter_output_limit
+  type: single
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: rawValue
+    type: direct
+    path: /spec/emitter/limits/output
+  value:
+    type: direct
+    path: /spec/emitter/limits/output
+- metric: response_ratio
+  type: single
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: host
+    type: direct
+    path: /status/endpoints/collector
+  value:
+    type: calc
+    vars:
+     - name: namespace
+       type: direct
+       path: /spec/namespace
+     - name: endpoint
+       type: direct
+       path: /status/endpoints/collector
+     - name: reqValue
+       type: custom-metric
+       path: namespaces/((namespace))/ingresses.extensions/((endpoint))/nginx_requests_avg_30s
+     - name: respValue
+       type: custom-metric
+       path: namespaces/((namespace))/ingresses.extensions/((endpoint))/nginx_responses_avg_30s
+     - name: maxValue
+       type: direct
+       path: /spec/collector/limits/input
+    formula: respValue*100/min(maxValue, reqValue)
+- metric: collector_pressure
+  type: single
+  labels:
+  - name: clientId
+    type: direct
+    path: /spec/clientId
+  - name: flow_namespace
+    type: direct
+    path: /spec/namespace
+  - name: host
+    type: direct
+    path: /status/endpoints/collector
+  value:
+    type: calc
+    vars:
+     - name: namespace
+       type: direct
+       path: /spec/namespace
+     - name: endpoint
+       type: direct
+       path: /status/endpoints/collector
+     - name: reqValue
+       type: custom-metric
+       path: namespaces/((namespace))/ingresses.extensions/((endpoint))/nginx_requests_avg_30s
+     - name: respValue
+       type: custom-metric
+       path: namespaces/((namespace))/ingresses.extensions/((endpoint))/nginx_responses_avg_30s
+     - name: maxValue
+       type: direct
+       path: /spec/collector/limits/input
+    formula: 100 * min(maxValue, reqValue) / respValue

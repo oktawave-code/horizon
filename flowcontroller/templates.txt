@@ -1,0 +1,76 @@
+Templates use ((some/path/name)) or (((some/path/name:type)) notation for user
+provided values.
+
+Relative path starts at "base" defined in /metadata/annotations/flowDef/base
+(In case of lists, they start level below, on each particular list entry)
+
+Absolute paths ((/some/absolute/path)) start at root.
+
+Type is inherited from user provided value, defined by explicit conversion
+or automatically forced as string if concatenation occurs (in that order)
+
+Possible types:
+ int
+ str
+   nonempty (subset of str, only non empty strings allowed)
+   name (subset of str, only correct kubernetes names allowed)
+   image (subset of str, only correct kubernetes docker images allowed)
+ obj
+
+Documentation by example:
+
+---
+# Flow:
+spec:
+  somedefs:
+    str1: blah
+    str2: "123"
+    str3: ""
+    num: 123
+    obj:
+      a: 1
+      b: abc
+
+---
+# Template:
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/somedefs
+spec:
+  resultIsNumber:
+    justUseProvidedType: ((num))
+    conversionNotNeeded: ((num:int))
+    explicitConversion: ((str2:int))
+  resultIsString:
+    justUseProvidedType: ((str1))
+    conversionNotNeeded: ((str1:str))
+    concatenationForcesStringType: ((num))-someSuffix
+    someOtherConcatenation: ((str1))((str2))
+    evenForEdgeCases: ((num))((str3))
+    explicitConversion: ((num:str))
+    ignoredConversion: somePrefix((str2:int))
+  resultIsObject:
+    includeEntireSubtree: ((obj))
+    conversionNotNeeded: ((obj:obj))
+  willFail:
+    missingValue: ((missing))
+    valueIsNotANumber: ((str1:int))
+    cantConvertObjectsToInts: ((obj:int))
+    cantConvertObjectsToStrings: ((obj))something
+    cantConvertStringsToObjects: ((str1:obj))
+
+
+
+---------------
+More coplicated version sketch
+Conversions table:
+
+                 type modifier:	str		int		obj
+provided value: 
+str				=		fail		fail
+str (with numeric value)	=		cast		fail
+str (with json)			=		fail		deserialize
+int				cast		=		fail
+obj				serialize	fail		=

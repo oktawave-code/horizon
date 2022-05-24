@@ -1,0 +1,16 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/flink
+  name: flink-taskmanager
+spec:
+  maxReplicas: ((limits/maxCnt))
+  minReplicas: ((limits/minCnt))
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: flink-taskmanager
+  targetCPUUtilizationPercentage: 80

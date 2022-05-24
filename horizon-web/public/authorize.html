@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <script type="text/javascript" src="/libs/oidc-client.min.js"></script>
+    <script type="text/javascript">
+
+        const settings = {
+            authority: 'https://id.dev.oktawave.com/core',
+            client_id: 'HorizonWeb',
+            redirect_uri: window.location.protocol + '//' + window.location.host + '/authorize.html',
+            post_logout_redirect_uri: window.location.protocol + '//' + window.location.host + '/index.html',
+            response_type: 'id_token token',
+            scope: 'oktawave.api openid profile',
+            silent_redirect_uri: window.location.protocol + '//' + window.location.host + '/silent_renew.html',
+            filterProtocolClaims: false,
+            automaticSilentRenew: true
+        };
+
+        const manager = new Oidc.UserManager(this.settings);
+        manager.signinRedirectCallback()
+            .then(user => {
+                if (user === null) {
+                    console.error('User is undefined');
+                } else {
+                    window.location = '/';
+                }
+            })
+            .catch(err => {
+                console.error('User authentication error.', err);
+            });
+
+    </script>
+</body>
+
+</html>

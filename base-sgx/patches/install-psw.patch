@@ -1,0 +1,13 @@
+--- /tmp/linux-sgx/linux/installer/common/psw/install.sh.bak	2019-11-18 12:58:35.933997253 +0000
++++ /tmp/linux-sgx/linux/installer/common/psw/install.sh	2019-11-18 12:55:16.814174560 +0000
+@@ -94,9 +94,7 @@
+     /sbin/initctl reload-configuration
+     retval=$?
+ else
+-    echo " failed."
+-    echo "Unsupported platform - neither systemctl nor initctl is found."
+-    exit 5
++    retval=0
+ fi
+ 
+ if test $retval -ne 0; then

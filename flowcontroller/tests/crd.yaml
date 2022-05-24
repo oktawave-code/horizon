@@ -1,0 +1,11 @@
+kind: CustomResourceDefinition
+metadata:
+  name: tests.horizon.oktawave
+spec:
+  group: horizon.oktawave
+  version: v1alpha1
+  names:
+    kind: Test
+    plural: tests
+    singular: test
+  scope: Cluster

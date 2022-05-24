@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/emitter
+      statusPatch:
+        endpoints:
+          emitter: ((/spec/namespace)).((@ENV[EMITTER_SUFFIX]))
+    kubernetes.io/ingress.class: nginx
+    nginx.org/keepalive: "128"
+    nginx.org/location-snippets: "limit_req zone=perserver((limits/output)) burst=10;"
+  name: emiter-ingress
+spec:
+  tls:
+  - hosts:
+    - ((/spec/namespace)).((@ENV[EMITTER_SUFFIX]))
+    secretName: default-server-secret
+  rules:
+  - host: ((/spec/namespace)).((@ENV[EMITTER_SUFFIX]))
+    http:
+      paths:
+      - backend:
+          serviceName: emiter
+          servicePort: 8080
+        path: /

@@ -1,0 +1,75 @@
+enclave {
+
+    from "sgx_tsgxssl.edl" import *;
+    from "sgx_tprotected_fs.edl" import *;
+
+
+    trusted {
+        // public int ecall_invoke(
+        //   uint32_t operation,
+        //   [in, size=input_len] uint8_t* input,
+        //   uint32_t input_len,
+        //   [out, size=8192] uint8_t* output,
+        //   [out, count=1] uint32_t* output_len
+        // );
+
+        public int ecall_invoke(
+          uint32_t operation,
+          [user_check] uint8_t* input,
+          uint32_t input_len,
+          [in, string] const char* ip,
+          [user_check] uint8_t* output,
+          [user_check] uint32_t* output_len
+        );
+
+
+    //    public int ecall_invoke(
+    //      uint32_t operation,
+    //      [user_check] uint8_t* input,
+    //      uint32_t input_len,
+    //      [user_check] uint8_t* output,
+    //      [user_check] uint32_t* output_len
+    //    );
+
+        // public int ecall_create_key(
+        //   [user_check] const char* access_token,
+        //   [user_check] uint8_t* out_key_id,
+        //   [user_check] uint8_t* out_token
+        // );
+
+        // public int ecall_create_alias(
+        //   [user_check] uint8_t* key_id,
+        //   [user_check] uint8_t* Keyoken,
+        //   [user_check] const char* alias,
+        //   [user_check] const char* action,
+        //   [user_check] uint8_t* out_alias_token
+        // );
+        //
+        // public int ecall_encrypt_aes256_gcm(
+        //   [in, size=8] uint8_t* key_id,
+        //   [in, string] const char* alias,
+        //   [in, size=16] uint8_t* alias_token,
+        //   [in, size=plaintext_len]uint8_t* plaintext, uint32_t plaintext_len,
+        //   [in, size=aad_len]uint8_t* aad, uint32_t aad_len,
+        //   [out, size=plaintext_len]uint8_t* out_ciphertext,
+        //   [out, size=12]uint8_t* out_iv,
+        //   [out, size=16]uint8_t* out_tag
+        // );
+        //
+        // public int ecall_decrypt_aes256_gcm(
+        //   [in, size=8] uint8_t* key_id,
+        //   [in, string] const char* alias,
+        //   [in, size=16] uint8_t* alias_token,
+        //   [in, size=ciphertext_len]uint8_t* ciphertext, uint32_t ciphertext_len,
+        //   [in, size=aad_len]uint8_t* aad, uint32_t aad_len,
+        //   [out, size=ciphertext_len]uint8_t* out_plaintext,
+        //   [in, size=12]uint8_t* iv,
+        //   [in, size=16]uint8_t* tag
+        // );
+
+    };
+
+    untrusted {
+        void ocall_print_string([in, string] const char* str);
+    };
+};

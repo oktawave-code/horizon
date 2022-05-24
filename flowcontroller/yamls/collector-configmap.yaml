@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    flowDef:
+      priority: 3
+      type: single
+      base: /spec/collector
+  name: collector-routing
+data:
+  routing.yaml: |
+    unroutedTopic: ((unrouted/topic:str))
+    routing:
+    ((routing:yaml))
+    meta:
+    ((meta:yaml))

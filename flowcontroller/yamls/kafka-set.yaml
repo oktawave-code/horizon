@@ -1,0 +1,106 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/kafka
+  name: kafka
+spec:
+  serviceName: kafka-service
+  replicas: ((cnt:int))
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - kafka
+              topologyKey: "kubernetes.io/hostname"
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+             - weight: 1
+               podAffinityTerm:
+                 labelSelector:
+                    matchExpressions:
+                      - key: "app"
+                        operator: In
+                        values:
+                        - zk
+                 topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 60
+      nodeSelector:
+        role: node
+      initContainers:
+      - name: zookeper-availability-check
+        image: registry.hn.oktawave.com/busybox:1.29.2
+        command: ['sh', '-c', 'while ! echo ruok | nc -w1 zk-svc 2181 | grep -q imok; do sleep 1; done;']
+      containers:
+      - name: k8skafka
+        imagePullPolicy: Always
+        image: ((@ENV[KAFKA_IMAGE]))
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+        ports:
+        - containerPort: 9092
+          name: server
+        env:
+        - name: KAFKA_HEAP_OPTS
+          value: "-Xmx512M -Xms512M"
+        - name: KAFKA_OPTS
+          value: "-Dlogging.level=INFO"
+        - name: ZOOKEPER_CONNECT
+          value: "zk-svc:2181"
+        - name: RETENTION_HOURS
+          value: "((retention:str))"
+        - name: QUOTA_CONSUMER
+          value: "10485760"
+        - name: QUOTA_PRODUCER
+          value: "10485760"
+        - name: MESSAGE_MAX_BYTES
+          value: "10485760"
+        - name: MAX_REQUEST_SIZE
+          value: "10485760"
+        - name: NUMPARTITIONS
+          value: "1"
+        - name: REPLICATION_FACTOR
+          value: "2"
+        - name: DELETE_TOPIC_ENABLE
+          value: "true"
+        volumeMounts:
+        - name: datadir
+          mountPath: /var/lib/kafka
+        readinessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+      securityContext:
+        runAsUser: 500
+        fsGroup: 500
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: rbd
+      resources:
+        requests:
+          storage: 86400Mi

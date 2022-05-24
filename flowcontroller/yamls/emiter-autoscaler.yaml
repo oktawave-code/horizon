@@ -1,0 +1,17 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    flowDef:
+      type: single
+      base: /spec/emitter
+      condition: "*limits/maxCnt"
+  name: emiter
+spec:
+  maxReplicas: ((limits/maxCnt))
+  minReplicas: ((limits/minCnt))
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: emitter
+  targetCPUUtilizationPercentage: 60
