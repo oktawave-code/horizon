@@ -1,6 +1,9 @@
 # OCK
 
-Oktawave Cloud Keys - is an implementation of cryptographic services working as a HSM(Hardware Sevcurity Module) based on an scientific research([link](/assets/GraFPE.pdf), [link](/assets/RiffleScrambler.pdf)).
+Oktawave Cloud Keys - is an implementation of cryptographic services working as a HSM(Hardware Sevcurity Module) based on an scientific research
+
+- [GraFPE](/assets/GraFPE.pdf)
+- [Riffle Scrambler](/assets/RiffleScrambler.pdf)
 
 Functionality
 - cryptographic keys management
